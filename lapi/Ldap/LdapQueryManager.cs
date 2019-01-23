@@ -33,7 +33,7 @@ namespace lapi.Ldap
             switch (type) {
                 case LdapSearchType.User:
                     logger.Debug("Serching all users");
-                    return SendSearch(searchBase, $"(&(objectClass=user)(objectCategory=person))");
+                    return SendSearch(searchBase, $"(objectClass=person)");
                 case LdapSearchType.Group:
                     logger.Debug("Serching all groups");
                     return SendSearch(searchBase, $"(objectClass=group)");
@@ -163,7 +163,7 @@ namespace lapi.Ldap
             {
                 case LdapSearchType.User:
                     logger.Debug("Serching all users");
-                    return ExecutePagedSearch(searchBase, $"(&(objectClass=user)(objectCategory=person))");
+                    return ExecutePagedSearch(searchBase, $"(objectClass=person)");
                 case LdapSearchType.Group:
                     logger.Debug("Serching all groups");
                     return ExecutePagedSearch(searchBase, $"(objectClass=group)");
@@ -207,7 +207,7 @@ namespace lapi.Ldap
             * Novell eDirectory support of this functionaliry.
             */
             LdapSortKey[] keys = new LdapSortKey[1];
-            keys[0] = new LdapSortKey("name");
+            keys[0] = new LdapSortKey("cn");
 
             // Create the sort control 
             requestControls[0] = new LdapSortControl(keys, true);
@@ -252,7 +252,7 @@ namespace lapi.Ldap
             ILdapSearchResults res = (LdapSearchResults)conn.Search(sb, LdapConnection.ScopeSub, filter, null, false, (LdapSearchConstraints)null);
 
             // Loop through the results and print them out
-            while (res.HasMore())
+            while (res.Count > 0 && res.HasMore())
             {
 
                 /* Get next returned entry.  Note that we should expect a Ldap-

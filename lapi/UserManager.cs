@@ -38,23 +38,6 @@ namespace lapi
 
             int results = 0;
 
-            /*
-            var queue = sMgmt.SendSearch("", LdapSearchType.User);
-
-            LdapMessage message;
-
-
-            while ((message = queue.GetResponse()) != null)
-            {
-                if (message is LdapSearchResult)
-                {
-                    LdapEntry entry = ((LdapSearchResult)message).Entry;
-                    users.Add(entry.GetAttribute("distinguishedName").StringValue);
-                    results++;
-                }
-            }
-            */
-
             var resps = sMgmt.ExecutePagedSearch("", LdapSearchType.User);
 
             foreach(var entry in resps)
