@@ -64,13 +64,81 @@ namespace lapi.Ldap
 
         }
 
+        public List<LdapEntry> ExecuteSearch(string searchBase, LdapSearchType type)
+        {
+            switch (type)
+            {
+                case LdapSearchType.User:
+                    logger.Debug("Serching all users");
+                    return ExecuteSearch(searchBase, $"(objectClass=person)");
+                case LdapSearchType.Group:
+                    logger.Debug("Serching all groups");
+                    return ExecuteSearch(searchBase, $"(objectClass=group)");
+                case LdapSearchType.OU:
+                    logger.Debug("Serching all OUs");
+                    return ExecuteSearch(searchBase, $"(&(ou=*)(objectClass=organizationalunit))");
+                case LdapSearchType.Machine:
+                    logger.Debug("Serching all computers");
+                    return ExecuteSearch(searchBase, $"(objectClass=computer)");
+                default:
+                    logger.Error("Search type not specified.");
+                    throw new domain.Exceptions.WrongParameterException("Search type not specified");
+            }
+        }
+        
+        public List<LdapEntry> ExecuteSearch(string searchBase, string filter)
+        {
+            var results = new List<LdapEntry>();
+
+            var lcm = LdapConnectionManager.Instance;
+            var conn = lcm.GetConnection();
+
+            var sb = searchBase + config.searchBase;
+
+
+            // Send the search request - Synchronous Search is being used here 
+            logger.Debug("Calling Asynchronous Search...");
+            ILdapSearchResults res = (LdapSearchResults)conn.Search(sb, LdapConnection.ScopeSub, filter, null, false, (LdapSearchConstraints)null);
+
+            // Loop through the results and print them out
+            while (res.HasMore())
+            {
+
+                /* Get next returned entry.  Note that we should expect a Ldap-
+                *Exception object as well just in case something goes wrong
+                */
+                LdapEntry nextEntry = null;
+                try
+                {
+                    nextEntry = res.Next();
+                    results.Add(nextEntry);
+                }
+                catch (Exception e)
+                {
+                    if (e is LdapReferralException)
+                        continue;
+                    else
+                    {
+                        logger.Error("Search stopped with exception " + e.ToString());
+                        break;
+                    }
+                }
+
+                /* Print out the returned Entries distinguished name.  */
+                logger.Debug(nextEntry.Dn);
+
+            }
+
+            return results;
+        }
+        
         public List<LdapEntry> ExecuteLimitedSearch(string searchBase, LdapSearchType type, int start, int end)
         {
             switch (type)
             {
                 case LdapSearchType.User:
                     logger.Debug("Serching all users");
-                    return ExecuteLimitedSearch(searchBase, $"(&(objectClass=user)(objectCategory=person))", start, end);
+                    return ExecuteLimitedSearch(searchBase, $"(objectClass=person)", start, end);
                 case LdapSearchType.Group:
                     logger.Debug("Serching all groups");
                     return ExecuteLimitedSearch(searchBase, $"(objectClass=group)", start, end);

@@ -38,11 +38,13 @@ namespace lapi
 
             int results = 0;
 
-            var resps = sMgmt.ExecutePagedSearch("", LdapSearchType.User);
+            var resps = sMgmt.ExecuteSearch("", LdapSearchType.User);
+            
+            //var resps = sMgmt.ExecutePagedSearch("", LdapSearchType.User);
 
             foreach(var entry in resps)
             {
-                users.Add(entry.GetAttribute("distinguishedName").StringValue);
+                users.Add(entry.Dn);
                 results++;
             }
 
