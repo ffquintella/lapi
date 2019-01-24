@@ -96,7 +96,7 @@ namespace lapi
 
             var sMgmt = LdapQueryManager.Instance;
 
-            var resps = sMgmt.ExecutePagedSearch("", LdapSearchType.User);
+            var resps = sMgmt.ExecuteSearch("", LdapSearchType.User);
             int results = 0;
 
             foreach (var entry in resps)
@@ -275,10 +275,8 @@ namespace lapi
         {
             LdapAttributeSet attributeSet = new LdapAttributeSet();
 
-            attributeSet.Add(new LdapAttribute("objectclass", new string[] { "top", "person", "organizationalPerson", "user" }));
-            attributeSet.Add(new LdapAttribute("cn", new string[] { user.Login }));
-            attributeSet.Add(new LdapAttribute("name", user.Name));
-            attributeSet.Add(new LdapAttribute("sAMAccountName", user.Login));
+            attributeSet.Add(new LdapAttribute("objectclass", new string[] { "top", "person" }));
+            attributeSet.Add(new LdapAttribute("cn", new string[] { user.Name }));
 
 
             attributeSet.Add(new LdapAttribute("displayName", user.Name));
@@ -298,14 +296,16 @@ namespace lapi
                     throw new domain.Exceptions.SSLRequiredException();
                 }
 
-                string quotePwd = String.Format(@"""{0}""", user.Password);
-                byte[] encodedBytes = Encoding.Unicode.GetBytes(quotePwd);
-                attributeSet.Add(new LdapAttribute("unicodePwd", encodedBytes));
+                //string quotePwd = String.Format(@"""{0}""", user.Password);
+                //byte[] encodedBytes = Encoding.Unicode.GetBytes(quotePwd);
+                //attributeSet.Add(new LdapAttribute("unicodePwd", encodedBytes));
+
+                var hashedPassword = lapi.Security.HashHelper.GenerateSaltedSHA1(user.Password);
+                attributeSet.Add(new LdapAttribute("userPassword", hashedPassword));
+                
 
 
             }
-
-            attributeSet.Add(new LdapAttribute("userAccountControl", user.accountControl.ToString()));
 
             //attributeSet.Add(new LdapAttribute("givenname", "James"));
             //attributeSet.Add(new LdapAttribute("sn", "Smith"));
@@ -318,31 +318,13 @@ namespace lapi
         {
             var user = new User();
 
-            user.Name = entry.GetAttribute("name").StringValue;
-            user.Login = entry.GetAttribute("sAMAccountName").StringValue;
+            user.Name = entry.GetAttribute("cn").StringValue;
 
             if(entry.GetAttribute("description") != null) user.Description = entry.GetAttribute("description").StringValue;
 
-            var sid = ConvertByteToStringSid((byte[])(Array)entry.GetAttribute("objectSid").ByteValue);
 
-            user.ID = sid;
-
-            user.DN = entry.GetAttribute("distinguishedName").StringValue;
-           
-
-            if (entry.GetAttribute("memberOf") != null)
-            {
-                var moff = entry.GetAttribute("memberOf").StringValues;
-
-                while (moff.MoveNext())
-                {
-                    var group = new Group();
-                    if (moff != null && moff.Current != null)
-                        group.DN = moff.Current;
-                    user.MemberOf.Add(group);
-                }
-            }
-
+            user.DN = entry.Dn;
+          
 
             return user;
         }

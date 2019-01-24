@@ -68,8 +68,15 @@ namespace lapi.Ldap
                     var server = GetOptimalSever(config.servers);
                     var server2 = GetOptimalSever(config.servers);
 
-                    cn.Connect(server.FQDN, server.Port);
-                    cnClean.Connect(server2.FQDN, server2.Port);
+                    try
+                    {
+                        cn.Connect(server.FQDN, server.Port);
+                        cnClean.Connect(server2.FQDN, server2.Port);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error(ex, "Error oppening connection to server1:{0} port:{2} or server2:{1} port{3}", server.FQDN, server2.FQDN, server.Port, server2.Port );
+                    }
 
                     try
                     {

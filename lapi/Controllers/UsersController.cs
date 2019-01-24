@@ -49,7 +49,11 @@ namespace lapi.Controllers
             }
 
             if (_start == 0 && _end == 0) return uManager.GetList();
-            else return uManager.GetList(_start, _end);
+            else
+            {
+                throw new NotImplementedException();
+                //return uManager.GetList(_start, _end);
+            }
 
             //return users;
 
@@ -75,7 +79,11 @@ namespace lapi.Controllers
                 List<domain.User> users;
 
                 if (_start == 0 && _end == 0) users = uManager.GetUsers();
-                else users = uManager.GetUsers(_start, _end);
+                else
+                {
+                    throw new NotImplementedException();
+                    //users = uManager.GetUsers(_start, _end);
+                }
 
                 return users;
             }
@@ -131,7 +139,9 @@ namespace lapi.Controllers
         [HttpGet("{DN}/member-of/{group}")]
         public IActionResult IsMemberOf(string DN, string group)
         {
-            this.ProcessRequest();
+            throw new NotImplementedException();
+            
+            /*this.ProcessRequest();
 
             var uManager = UserManager.Instance;
 
@@ -159,6 +169,7 @@ namespace lapi.Controllers
                 logger.LogDebug(ItemExists, "User DN={dn} not found.");
                 return NotFound();
             }
+            */
 
         }
         #endregion
@@ -171,9 +182,9 @@ namespace lapi.Controllers
         {
 
             var uManager = UserManager.Instance;
-            var aduser = uManager.GetUser(DN);
+            var duser = uManager.GetUser(DN);
 
-            if (aduser == null)
+            if (duser == null)
             {
                 logger.LogDebug(PutItem, "User DN={dn} found", DN);
                 return NotFound();
@@ -182,7 +193,7 @@ namespace lapi.Controllers
             {
                 string login;
 
-                if (req.Login == null) login = aduser.Login;
+                if (req.Login == null) login = duser.Name;
                 else login = req.Login;
 
                 var success = uManager.ValidateAuthentication(login, req.Password);
