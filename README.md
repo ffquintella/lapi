@@ -1,8 +1,8 @@
-# adrapi
-Active Directory Rest API
+# ldapapi
+LDAP API
 
 ## ABOUT
-This is a simple rest api to query and change active directory. It is build with .net core 2.1 and can be run with docker. 
+This is a simple rest api to query and change a ldap directory (it is made to work with openldap). It is build with .net core 2.1 and can be run with docker. 
 
 ## Requirements 
 
