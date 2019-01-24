@@ -270,13 +270,15 @@ namespace lapi.Controllers
 
                 var aduser = uManager.GetUser(DN);
 
+                user.DN = DN;
 
+                if (user.Surname == null) user.Surname = "---";
+                
                 if (aduser == null)
                 {
                     // New User
                     logger.LogInformation(InsertItem, "Creating user DN={DN}", DN);
 
-                    user.DN = DN;
 
                     var result = uManager.CreateUser(user);
                     if (result == 0) return Ok();
@@ -288,7 +290,6 @@ namespace lapi.Controllers
                     // Update 
                     logger.LogInformation(UpdateItem, "Updating user DN={DN}", DN);
 
-                    user.DN = DN;
 
                     var result = uManager.SaveUser(user);
                     if (result == 0) return Ok();

@@ -277,9 +277,8 @@ namespace lapi
 
             attributeSet.Add(new LdapAttribute("objectclass", new string[] { "top", "person" }));
             attributeSet.Add(new LdapAttribute("cn", new string[] { user.Name }));
+            attributeSet.Add(new LdapAttribute("sn", user.Surname ));
 
-
-            attributeSet.Add(new LdapAttribute("displayName", user.Name));
             attributeSet.Add(new LdapAttribute("description", user.Description));
 
 
@@ -291,10 +290,10 @@ namespace lapi
             {
                 if (user.IsDisabled == null) user.IsDisabled = false;
                 var ldapCfg = new LdapConfig();
-                if (ldapCfg.ssl == false)
+                /*if (ldapCfg.ssl == false)
                 {
                     throw new domain.Exceptions.SSLRequiredException();
-                }
+                }*/
 
                 //string quotePwd = String.Format(@"""{0}""", user.Password);
                 //byte[] encodedBytes = Encoding.Unicode.GetBytes(quotePwd);
