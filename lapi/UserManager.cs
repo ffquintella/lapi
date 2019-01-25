@@ -261,12 +261,12 @@ namespace lapi
 
         }
 
-        public bool ValidateAuthentication(string login, string password)
+        public bool ValidateAuthentication(string DN, string password)
         {
 
             LdapConnectionManager lcm = LdapConnectionManager.Instance;
 
-            return lcm.ValidateAuthentication(login, password);
+            return lcm.ValidateAuthentication(DN, password);
 
         }
 
@@ -275,7 +275,7 @@ namespace lapi
         {
             LdapAttributeSet attributeSet = new LdapAttributeSet();
 
-            attributeSet.Add(new LdapAttribute("objectclass", new string[] { "top", "person" }));
+            attributeSet.Add(new LdapAttribute("objectclass", new string[] { "top", "person", "simpleSecurityObject" }));
             attributeSet.Add(new LdapAttribute("cn", new string[] { user.Name }));
             if (user.Surname == null) user.Surname = "---";
             attributeSet.Add(new LdapAttribute("sn", user.Surname ));

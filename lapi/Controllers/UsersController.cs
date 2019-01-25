@@ -191,12 +191,9 @@ namespace lapi.Controllers
             }
             else
             {
-                string login;
 
-                if (req.Login == null) login = duser.Name;
-                else login = req.Login;
 
-                var success = uManager.ValidateAuthentication(login, req.Password);
+                var success = uManager.ValidateAuthentication(DN, req.Password);
 
                 if (success) return Ok();
                 return StatusCode(401);
@@ -309,6 +306,7 @@ namespace lapi.Controllers
 
         #endregion
         
+        #region DELETE
         /// <summary>
         /// Delete the specified DN.
         /// </summary>
@@ -363,6 +361,7 @@ namespace lapi.Controllers
 
 
         }
+        #endregion
 
     }
 

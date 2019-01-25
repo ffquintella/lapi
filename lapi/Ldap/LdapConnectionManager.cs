@@ -157,7 +157,7 @@ namespace lapi.Ldap
         }
 
 
-        public bool ValidateAuthentication(string login, string password)
+        public bool ValidateAuthentication(string dn, string password)
         {
             int LdapVersion = LdapConnection.LdapV3;
 
@@ -165,7 +165,7 @@ namespace lapi.Ldap
 
             var server = GetOptimalSever(ldapConf.servers);
 
-            logger.Debug("Authenticating user: {login} on server: {server}", login, server);
+            logger.Debug("Authenticating user: {login} on server: {server}", dn, server);
 
             var cn = new LdapConnection();
 
@@ -179,7 +179,7 @@ namespace lapi.Ldap
 
             cn.Connect(server.FQDN, server.Port);
 
-            ldapConf.bindDn = login;
+            ldapConf.bindDn = dn;
             ldapConf.bindCredentials = password;
 
 
@@ -191,7 +191,7 @@ namespace lapi.Ldap
             }
             catch (Exception ex)
             {
-                logger.Info(ex, "Authentication failed for login:{user}", login);
+                logger.Info(ex, "Authentication failed for login:{user}", dn);
                 return false;
             }
 
