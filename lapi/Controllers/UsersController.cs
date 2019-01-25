@@ -309,7 +309,60 @@ namespace lapi.Controllers
 
         #endregion
         
-        
+        /// <summary>
+        /// Delete the specified DN.
+        /// </summary>
+        /// <response code="200">Deleted Ok</response>
+        /// <response code="404">OU not found</response>
+        /// <response code="500">Internal Server error</response>
+        [Authorize(Policy = "Writting")]
+        [HttpDelete("{DN}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(500)]
+        public ActionResult Delete(string DN)
+        {
+            ProcessRequest();
+
+            logger.LogDebug(PutItem, "Tring to delete User:{0}", DN);
+
+            Regex regex = new Regex(@"\Acn=(?<login>[^,]+?),", RegexOptions.IgnoreCase);
+
+            Match match = regex.Match(DN);
+
+            if (!match.Success)
+            {
+                logger.LogError(PutItem, "DN is not correcly formated  DN={0}", DN);
+                return Conflict();
+            }
+
+
+
+            var uManager = UserManager.Instance;
+
+            var duser = uManager.GetUser(DN);
+
+            if (duser == null)
+            {
+                // No User
+                logger.LogError(DeleteItem, "Tring to delete unexistent User DN={DN}", DN);
+
+                return NotFound();
+
+            }
+            else
+            {
+                // Delete 
+                logger.LogInformation(DeleteItem, "Deleting user DN={DN}", DN);
+
+                var result = uManager.DeleteUser(duser);
+                if (result == 0) return Ok();
+                else return this.StatusCode(500);
+
+            }
+
+
+        }
 
     }
 
