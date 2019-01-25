@@ -216,11 +216,11 @@ namespace lapi
    
                 foreach (LdapAttribute attr in atributes)
                 {
-                    //TODO: Threat the userAccountControl
+                    
                     if (
                         attr.Name != "cn"
                         && attr.Name != "objectclass"
-                        && attr.Name != "userAccountControl"
+                        && attr.Name != "userPassword"
                       )
                     {
 
@@ -277,10 +277,19 @@ namespace lapi
 
             attributeSet.Add(new LdapAttribute("objectclass", new string[] { "top", "person" }));
             attributeSet.Add(new LdapAttribute("cn", new string[] { user.Name }));
+            if (user.Surname == null) user.Surname = "---";
             attributeSet.Add(new LdapAttribute("sn", user.Surname ));
 
-            attributeSet.Add(new LdapAttribute("description", user.Description));
 
+            if (user.IsDisabled == true)
+            {
+                if (!user.Description.StartsWith("[DISABLED]"))
+                    attributeSet.Add(new LdapAttribute("description", "[DISABLED]"+user.Description));
+            }
+            else
+            {
+                attributeSet.Add(new LdapAttribute("description", user.Description));
+            }
 
             if (user.Password == null )
             {
@@ -323,7 +332,11 @@ namespace lapi
 
             user.DN = entry.Dn;
 
-            if (user.Description.StartsWith("[DISABLED]")) user.IsDisabled = true;
+            if (user.Description.StartsWith("[DISABLED]"))
+            {
+                user.IsDisabled = true;
+                user.Description = user.Description.Substring("[DISABLED]".Length);
+            }
             else user.IsDisabled = false;
           
 
