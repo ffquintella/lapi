@@ -321,8 +321,10 @@ namespace lapi
 
             if(entry.GetAttribute("description") != null) user.Description = entry.GetAttribute("description").StringValue;
 
-
             user.DN = entry.Dn;
+
+            if (user.Description.StartsWith("[DISABLED]")) user.IsDisabled = true;
+            else user.IsDisabled = false;
           
 
             return user;

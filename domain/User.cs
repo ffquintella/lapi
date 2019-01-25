@@ -18,9 +18,6 @@ namespace lapi.domain
 
 
         public bool? IsDisabled { get; set; }
-        public bool IsLocked { get; set; }
-        public bool PasswordExpired { get; set; }
-
 
 
 
