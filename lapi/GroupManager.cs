@@ -127,19 +127,6 @@ namespace lapi
             group.DN = entry.Dn;
 
 
-            if (entry.GetAttribute("memberOf") != null)
-            {
-                var moff = entry.GetAttribute("memberOf").StringValues;
-
-                while (moff.MoveNext())
-                {
-                    String gmoff = "";
-                    if (moff != null && moff.Current != null)
-                        gmoff = moff.Current;
-                    group.MemberOf.Add(gmoff);
-                }
-            }
-
             if (entry.GetAttribute("member") != null)
             {
                 var m = entry.GetAttribute("member").StringValues;
@@ -154,7 +141,36 @@ namespace lapi
                     }
                 }
             }
+            
+            if (entry.GetAttribute("uniqueMember") != null)
+            {
+                var m = entry.GetAttribute("uniqueMember").StringValues;
 
+                while (m.MoveNext())
+                {
+                    String member = "";
+                    if (m != null && m.Current != null)
+                    {
+                        member = m.Current;
+                        group.Member.Add(member);
+                    }
+                }
+            }
+            
+            var classes = entry.GetAttribute("objectClass").StringValues;
+
+            bool is_regular = false;
+            while (classes.MoveNext())
+            {
+                if (classes.Current == "groupOfNames")
+                {
+                    group.Type = GroupType.Regular;
+                    is_regular = true;
+                }
+            }
+
+            if (!is_regular) group.Type = GroupType.Unique;
+            
 
             return group;
         }
@@ -313,7 +329,6 @@ namespace lapi
 
             attributeSet.Add(new LdapAttribute("objectclass", new string[] { "top", "group" }));
             attributeSet.Add(new LdapAttribute("name", group.Name));
-            attributeSet.Add(new LdapAttribute("sAMAccountName", group.Name));
             attributeSet.Add(new LdapAttribute("cn", group.Name));
             attributeSet.Add(new LdapAttribute("description", group.Description));
 

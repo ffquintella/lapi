@@ -16,7 +16,8 @@ namespace lapi.domain
 
 
         public string DN { get; set; }
-        public string ID { get; set; }
+        
+        public GroupType Type { get; set; }
 
         private List<String> _member;
         public List<String> Member
@@ -32,18 +33,5 @@ namespace lapi.domain
             }
         }
 
-        private List<String> _memberOf;
-        public List<String> MemberOf
-        {
-            get
-            {
-                if (_memberOf == null) _memberOf = new List<String>();
-                return _memberOf;
-            }
-            set
-            {
-                _memberOf = value;
-            }
-        }
     }
 }
