@@ -37,11 +37,11 @@ namespace lapi
             int results = 0;
 
 
-            var resps = sMgmt.ExecutePagedSearch("", LdapSearchType.Group);
+            var resps = sMgmt.ExecuteSearch("", LdapSearchType.Group);
 
             foreach (var entry in resps)
             {
-                groups.Add(entry.GetAttribute("distinguishedName").StringValue);
+                groups.Add(entry.Dn);
                 results++;
             }
 
@@ -71,7 +71,7 @@ namespace lapi
 
             foreach (var entry in resps)
             {
-                groups.Add(entry.GetAttribute("distinguishedName").StringValue);
+                groups.Add(entry.Dn);
                 results++;
             }
 
@@ -92,7 +92,7 @@ namespace lapi
 
             var sMgmt = LdapQueryManager.Instance;
 
-            var resps = sMgmt.ExecutePagedSearch("", LdapSearchType.Group);
+            var resps = sMgmt.ExecuteSearch("", LdapSearchType.Group);
             int results = 0;
 
             foreach (var entry in resps)
@@ -116,7 +116,7 @@ namespace lapi
         {
             var group = new Group();
 
-            group.Name = entry.GetAttribute("name").StringValue;
+            group.Name = entry.GetAttribute("cn").StringValue;
           
             if (entry.GetAttribute("description") != null) group.Description = entry.GetAttribute("description").StringValue;
 
@@ -124,7 +124,7 @@ namespace lapi
 
             //group.ID = sid;
 
-            group.DN = entry.GetAttribute("distinguishedName").StringValue;
+            group.DN = entry.Dn;
 
 
             if (entry.GetAttribute("memberOf") != null)

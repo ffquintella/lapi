@@ -73,7 +73,7 @@ namespace lapi.Ldap
                     return ExecuteSearch(searchBase, $"(objectClass=person)");
                 case LdapSearchType.Group:
                     logger.Debug("Serching all groups");
-                    return ExecuteSearch(searchBase, $"(objectClass=group)");
+                    return ExecuteSearch(searchBase, $"(|(objectClass=groupOfNames)(objectClass=groupOfUniqueNames))");
                 case LdapSearchType.OU:
                     logger.Debug("Serching all OUs");
                     return ExecuteSearch(searchBase, $"(objectClass=organizationalUnit)");
@@ -141,7 +141,7 @@ namespace lapi.Ldap
                     return ExecuteLimitedSearch(searchBase, $"(objectClass=person)", start, end);
                 case LdapSearchType.Group:
                     logger.Debug("Serching all groups");
-                    return ExecuteLimitedSearch(searchBase, $"(objectClass=group)", start, end);
+                    return ExecuteLimitedSearch(searchBase, $"(|(objectClass=groupOfNames)(objectClass=groupOfUniqueNames))", start, end);
                 case LdapSearchType.OU:
                     logger.Debug("Serching all OUs");
                     return ExecuteLimitedSearch(searchBase, $"(objectClass=organizationalUnit)", start, end);
@@ -234,7 +234,7 @@ namespace lapi.Ldap
                     return ExecutePagedSearch(searchBase, $"(objectClass=person)");
                 case LdapSearchType.Group:
                     logger.Debug("Serching all groups");
-                    return ExecutePagedSearch(searchBase, $"(objectClass=group)");
+                    return ExecutePagedSearch(searchBase, $"(|(objectClass=groupOfNames)(objectClass=groupOfUniqueNames))");
                 case LdapSearchType.OU:
                     logger.Debug("Serching all OUs");
                     return ExecutePagedSearch(searchBase, $"(objectClass=organizationalUnit)");
