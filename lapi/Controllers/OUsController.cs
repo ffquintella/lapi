@@ -197,7 +197,7 @@ namespace lapi.Controllers
         {
             ProcessRequest();
 
-            logger.LogDebug(PutItem, "Tring to delete OU:{0}", DN);
+            logger.LogDebug(PutItem, "Trying to delete OU:{0}", DN);
 
             Regex regex = new Regex(@"\Aou=(?<login>[^,]+?),", RegexOptions.IgnoreCase);
 
@@ -218,7 +218,7 @@ namespace lapi.Controllers
             if (dou == null)
             {
                 // No User
-                logger.LogError(DeleteItem, "Tring to delete unexistent OU DN={DN}", DN);
+                logger.LogError(DeleteItem, "Trying to delete unexistent OU DN={DN}", DN);
 
                 return NotFound();
 

@@ -39,7 +39,7 @@ namespace lapi.Ldap
                     return SendSearch(searchBase, $"(objectClass=group)");
                 case LdapSearchType.OU:
                     logger.Debug("Serching all OUs");
-                    return SendSearch(searchBase, $"(&(ou=*)(objectClass=organizationalunit))");
+                    return SendSearch(searchBase, $"(objectClass=organizationalUnit)");
                 case LdapSearchType.Machine:
                     logger.Debug("Serching all computers");
                     return SendSearch(searchBase, $"(objectClass=computer)");
@@ -76,7 +76,7 @@ namespace lapi.Ldap
                     return ExecuteSearch(searchBase, $"(objectClass=group)");
                 case LdapSearchType.OU:
                     logger.Debug("Serching all OUs");
-                    return ExecuteSearch(searchBase, $"(&(ou=*)(objectClass=organizationalunit))");
+                    return ExecuteSearch(searchBase, $"(objectClass=organizationalUnit)");
                 case LdapSearchType.Machine:
                     logger.Debug("Serching all computers");
                     return ExecuteSearch(searchBase, $"(objectClass=computer)");
@@ -144,7 +144,7 @@ namespace lapi.Ldap
                     return ExecuteLimitedSearch(searchBase, $"(objectClass=group)", start, end);
                 case LdapSearchType.OU:
                     logger.Debug("Serching all OUs");
-                    return ExecuteLimitedSearch(searchBase, $"(&(ou=*)(objectClass=organizationalunit))", start, end);
+                    return ExecuteLimitedSearch(searchBase, $"(objectClass=organizationalUnit)", start, end);
                 case LdapSearchType.Machine:
                     logger.Debug("Serching all computers");
                     return ExecuteLimitedSearch(searchBase, $"(objectClass=computer)", start, end);
@@ -237,7 +237,7 @@ namespace lapi.Ldap
                     return ExecutePagedSearch(searchBase, $"(objectClass=group)");
                 case LdapSearchType.OU:
                     logger.Debug("Serching all OUs");
-                    return ExecutePagedSearch(searchBase, $"(&(ou=*)(objectClass=organizationalunit))");
+                    return ExecutePagedSearch(searchBase, $"(objectClass=organizationalUnit)");
                 case LdapSearchType.Machine:
                     logger.Debug("Serching all computers");
                     return ExecutePagedSearch(searchBase, $"(objectClass=computer)");

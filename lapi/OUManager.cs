@@ -36,11 +36,11 @@ namespace lapi
             int results = 0;
 
 
-            var resps = sMgmt.ExecutePagedSearch("", LdapSearchType.OU);
+            var resps = sMgmt.ExecuteSearch("", LdapSearchType.OU);
 
             foreach (var entry in resps)
             {
-                ous.Add(entry.GetAttribute("distinguishedName").StringValue);
+                ous.Add(entry.Dn);
                 results++;
             }
 
@@ -83,11 +83,11 @@ namespace lapi
         {
             var ou = new OU();
 
-            ou.Name = entry.GetAttribute("name").StringValue;
+            ou.Name = entry.GetAttribute("ou").StringValue;
 
             if (entry.GetAttribute("description") != null) ou.Description = entry.GetAttribute("description").StringValue;
 
-            ou.DN = entry.GetAttribute("distinguishedName").StringValue;
+            ou.DN = entry.Dn;
 
 
             return ou;
@@ -98,11 +98,8 @@ namespace lapi
             LdapAttributeSet attributeSet = new LdapAttributeSet();
 
             attributeSet.Add(new LdapAttribute("objectclass", new string[] { "top", "organizationalUnit" }));
-            attributeSet.Add(new LdapAttribute("name", ou.Name));
             attributeSet.Add(new LdapAttribute("ou", ou.Name));
             attributeSet.Add(new LdapAttribute("description", ou.Description));
-            attributeSet.Add(new LdapAttribute("distinguishedName", ou.DN));
-
 
             return attributeSet;
         }
