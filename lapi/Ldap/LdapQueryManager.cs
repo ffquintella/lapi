@@ -32,16 +32,16 @@ namespace lapi.Ldap
         {
             switch (type) {
                 case LdapSearchType.User:
-                    logger.Debug("Serching all users");
+                    logger.Debug("Searching all users");
                     return SendSearch(searchBase, $"(objectClass=person)");
                 case LdapSearchType.Group:
-                    logger.Debug("Serching all groups");
+                    logger.Debug("Searching all groups");
                     return SendSearch(searchBase, $"(objectClass=group)");
                 case LdapSearchType.OU:
-                    logger.Debug("Serching all OUs");
+                    logger.Debug("Searching all OUs");
                     return SendSearch(searchBase, $"(objectClass=organizationalUnit)");
                 case LdapSearchType.Machine:
-                    logger.Debug("Serching all computers");
+                    logger.Debug("Searching all computers");
                     return SendSearch(searchBase, $"(objectClass=computer)");
                 default:
                     logger.Error("Search type not specified.");
@@ -69,16 +69,16 @@ namespace lapi.Ldap
             switch (type)
             {
                 case LdapSearchType.User:
-                    logger.Debug("Serching all users");
+                    logger.Debug("Searching all users");
                     return ExecuteSearch(searchBase, $"(objectClass=person)");
                 case LdapSearchType.Group:
-                    logger.Debug("Serching all groups");
+                    logger.Debug("Searching all groups");
                     return ExecuteSearch(searchBase, $"(|(objectClass=groupOfNames)(objectClass=groupOfUniqueNames))");
                 case LdapSearchType.OU:
-                    logger.Debug("Serching all OUs");
+                    logger.Debug("Searching all OUs");
                     return ExecuteSearch(searchBase, $"(objectClass=organizationalUnit)");
                 case LdapSearchType.Machine:
-                    logger.Debug("Serching all computers");
+                    logger.Debug("Searching all computers");
                     return ExecuteSearch(searchBase, $"(objectClass=computer)");
                 default:
                     logger.Error("Search type not specified.");
@@ -137,19 +137,19 @@ namespace lapi.Ldap
             switch (type)
             {
                 case LdapSearchType.User:
-                    logger.Debug("Serching all users");
+                    logger.Debug("Searching all users");
                     return ExecuteLimitedSearch(searchBase, $"(objectClass=person)", start, end);
                 case LdapSearchType.Group:
-                    logger.Debug("Serching all groups");
+                    logger.Debug("Searching all groups");
                     return ExecuteLimitedSearch(searchBase, $"(|(objectClass=groupOfNames)(objectClass=groupOfUniqueNames))", start, end);
                 case LdapSearchType.OU:
-                    logger.Debug("Serching all OUs");
+                    logger.Debug("Searching all OUs");
                     return ExecuteLimitedSearch(searchBase, $"(objectClass=organizationalUnit)", start, end);
                 case LdapSearchType.Machine:
-                    logger.Debug("Serching all computers");
+                    logger.Debug("Searching all computers");
                     return ExecuteLimitedSearch(searchBase, $"(objectClass=computer)", start, end);
                 default:
-                    logger.Error("Search type not specified.");
+                    logger.Error("Searching type not specified.");
                     throw new domain.Exceptions.WrongParameterException("Search type not specified");
             }
         }
@@ -230,16 +230,16 @@ namespace lapi.Ldap
             switch (type)
             {
                 case LdapSearchType.User:
-                    logger.Debug("Serching all users");
+                    logger.Debug("Searching all users");
                     return ExecutePagedSearch(searchBase, $"(objectClass=person)");
                 case LdapSearchType.Group:
-                    logger.Debug("Serching all groups");
+                    logger.Debug("Searching all groups");
                     return ExecutePagedSearch(searchBase, $"(|(objectClass=groupOfNames)(objectClass=groupOfUniqueNames))");
                 case LdapSearchType.OU:
-                    logger.Debug("Serching all OUs");
+                    logger.Debug("Searching all OUs");
                     return ExecutePagedSearch(searchBase, $"(objectClass=organizationalUnit)");
                 case LdapSearchType.Machine:
-                    logger.Debug("Serching all computers");
+                    logger.Debug("Searching all computers");
                     return ExecutePagedSearch(searchBase, $"(objectClass=computer)");
                 default:
                     logger.Error("Search type not specified.");

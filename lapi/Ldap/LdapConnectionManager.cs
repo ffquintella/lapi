@@ -39,6 +39,8 @@ namespace lapi.Ldap
         public LdapConnection GetConnection(LdapConfig config, bool clean = false)
         {
 
+            logger.Debug("Getting Ldap connection");
+            
             int LdapVersion = LdapConnection.LdapV3;
 
             if (config == null) throw new NullException("Config cannot be null");
