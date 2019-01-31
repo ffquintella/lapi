@@ -70,6 +70,7 @@ namespace lapi.Ldap
 
                     try
                     {
+                        logger.Debug("Connecting to server:{0} port:{1}", server.FQDN, server.Port);
                         cn.Connect(server.FQDN, server.Port);
                         cnClean.Connect(server2.FQDN, server2.Port);
                     }
