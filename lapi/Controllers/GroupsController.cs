@@ -120,16 +120,25 @@ namespace lapi.Controllers
 
             try
             {
-                logger.LogDebug(ItemExists, "Group DN={dn} found", DN);
+                
                 var group = gManager.GetGroup(DN);
 
-                return Ok();
+                if (group != null)
+                {
+                    logger.LogDebug(ItemExists, "Group DN={dn} found", DN);
+                    return Ok();
+                }
+                else
+                {
+                    logger.LogDebug(ItemExists, "Group DN={dn} not found.");
+                    return NotFound();
+                }
 
             }
             catch (Exception)
             {
-                logger.LogDebug(ItemExists, "Group DN={dn} not found.");
-                return NotFound();
+
+                return this.StatusCode(500);
             }
 
         }
