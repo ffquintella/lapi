@@ -3,7 +3,7 @@ FROM ffquintella/docker-aspnetcore:2.2.1
 MAINTAINER Felipe Quintella <docker-jira@felipe.quintella.email>
 
 LABEL version="0.5.1"
-LABEL description="This image contains the adrapi api."
+LABEL description="This image contains the lapi api."
 
 
 ENV LANG=en_US.UTF-8
