@@ -39,7 +39,7 @@ namespace lapi.Ldap
         public LdapConnection GetConnection(LdapConfig config, bool clean = false)
         {
 
-            logger.Debug("Getting Ldap connection");
+            logger.Debug("Getting Ldap connection server:{0} ", config.servers[0]);
             
             int LdapVersion = LdapConnection.LdapV3;
 
