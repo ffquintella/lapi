@@ -98,6 +98,7 @@ Here there is a short description of the api. But you can also get the documenta
         - String: description (optional)
         - Array(String): member - List of DNs
 - GET - /api/groups/:group/exists - Returns code 200 if true and 404 if false.
+- GET - /api/groups/:group/is-member/:user - Returns code 200 if true and 404 if false.
 - GET - /api/groups/:group/members - Returns a list of the DNs of the groups members.
 - PUT - /api/groups/:group/members - Returns a list of the DNs of the groups members.
     - Body json:

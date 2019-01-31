@@ -156,8 +156,44 @@ namespace lapi.Controllers
             {
                 logger.LogDebug(ListItems, "Group DN={dn} found");
                 var group = gManager.GetGroup(DN);
+                
+                if(group == null ) return NotFound();
 
                 return group.Member;
+
+            }
+            catch (Exception)
+            {
+                logger.LogDebug(ListItems, "Group DN={dn} not found.");
+                return NotFound();
+            }
+
+        }
+        
+        
+        // GET api/groups/:group/is-member/:user
+        [HttpGet("{DN}/is-member/{UDN}")]
+        public ActionResult<List<String>> GetMembers(string DN, string UDN)
+        {
+            this.ProcessRequest();
+            var gManager = GroupManager.Instance;
+
+            try
+            {
+                logger.LogDebug(ListItems, "Group DN={dn} found");
+                var group = gManager.GetGroup(DN);
+
+                if( group == null ) return NotFound();
+
+                foreach (var user in group.Member)
+                {
+                    if (user == UDN) return Ok();
+                }
+
+                return NotFound();
+
+
+                //group.Member;
 
             }
             catch (Exception)
