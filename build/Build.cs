@@ -83,13 +83,13 @@ class Build : NukeBuild
                 .SetConfiguration(Configuration)
                 .SetAuthors(Authors)
                 .SetVersion(GitVersion.GetNormalizedFileVersion())
-                .SetTitle("ADRAPI")
+                .SetTitle("LAPI")
                 .SetOutput(AppDirectory)
                 .SetWorkingDirectory(RootDirectory)
                 .SetProject(Solution)
             );
           
-            CopyFile(RootDirectory + "/adrapi/nLog.prod.config", AppDirectory + "/nlog.config", FileExistsPolicy.OverwriteIfNewer);
+            CopyFile(RootDirectory + "/lapi/nLog.prod.config", AppDirectory + "/nlog.config", FileExistsPolicy.OverwriteIfNewer);
 
             string fileName = AppDirectory + "/version.txt";
             using (StreamWriter sw = new StreamWriter(fileName, false))
@@ -123,8 +123,8 @@ class Build : NukeBuild
             Logger.Log("Creating Docker Image...");
 
             DockerBuild(s => s
-                .AddLabel("adrapi")
-                .SetTag("ffquintella/adrapi:" + GitVersion.GetNormalizedFileVersion())
+                .AddLabel("ldapi")
+                .SetTag("ffquintella/lapi:" + GitVersion.GetNormalizedFileVersion())
                 .SetFile(DockerFile)
                 .SetForceRm(true)
                 .SetPath(RootDirectory)
@@ -138,7 +138,7 @@ class Build : NukeBuild
         {
             DockerPush(s => s
                 .SetWorkingDirectory(RootDirectory)
-                .SetName("ffquintella/adrapi:" + GitVersion.GetNormalizedFileVersion())
+                .SetName("ffquintella/lapi:" + GitVersion.GetNormalizedFileVersion())
             );
         });
 }
