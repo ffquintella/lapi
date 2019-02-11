@@ -1,8 +1,8 @@
-FROM ffquintella/docker-aspnetcore:2.2.1
+FROM ffquintella/docker-aspnetcore:runtime-2.2.3
 
 MAINTAINER Felipe Quintella <docker-jira@felipe.quintella.email>
 
-LABEL version="0.5.1"
+LABEL version="1.5.2"
 LABEL description="This image contains the lapi api."
 
 
