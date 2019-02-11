@@ -1,0 +1,1 @@
+./build.sh --target Deploy_Docker_Image --configuration release
