@@ -450,6 +450,11 @@ namespace lapi
             {
                 person.State = entry.GetAttribute("st").StringValue;
             }
+
+            if (entry.GetAttribute("sn") != null)
+            {
+                person.Surname = entry.GetAttribute("sn").StringValue;
+            }
             
 
             return person;
