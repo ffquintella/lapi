@@ -56,7 +56,9 @@ namespace lapi.Ldap
 
             var sb = searchBase + config.searchBase;
 
-            var req = new LdapSearchRequest(sb, LdapConnection.ScopeSub, filter, null, LdapSearchConstraints.DerefNever, config.maxResults, 0, false, null);
+            string[] attrs = {"createtimestamp", null};
+
+            var req = new LdapSearchRequest(sb, LdapConnection.ScopeSub, filter, attrs, LdapSearchConstraints.DerefNever, config.maxResults, 0, false, null);
             
             var queue = con.SendRequest(req, null);
                         
@@ -95,10 +97,11 @@ namespace lapi.Ldap
 
             var sb = searchBase + config.searchBase;
 
+            string[] attrs = {"createtimestamp", null};
 
             // Send the search request - Synchronous Search is being used here 
             logger.Debug("Calling Asynchronous Search...");
-            ILdapSearchResults res = (LdapSearchResults)conn.Search(sb, LdapConnection.ScopeSub, filter, null, false, (LdapSearchConstraints)null);
+            ILdapSearchResults res = (LdapSearchResults)conn.Search(sb, LdapConnection.ScopeSub, filter, attrs, false, (LdapSearchConstraints)null);
 
             // Loop through the results and print them out
             while (res.HasMore())
@@ -426,11 +429,29 @@ namespace lapi.Ldap
             var lcm = LdapConnectionManager.Instance;
             var con = lcm.GetConnection(true);
 
+            //string[] attrs = {"*", null};
+
+            //var lsc = new LdapSearchConstraints(); 
+            
             var res = con.Read(DN);
 
             return res;
 
         }
+        
+        public LdapEntry GetTimeStamps(string DN)
+        {
+            var lcm = LdapConnectionManager.Instance;
+            var con = lcm.GetConnection(true);
+
+            string[] attrs = {"createtimestamp", "modifyTimeStamp"};
+            
+            var res = con.Read(DN, attrs);
+
+            return res;
+
+        }
+        
 
         #endregion
 

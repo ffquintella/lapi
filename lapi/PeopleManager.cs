@@ -147,8 +147,19 @@ namespace lapi
             try
             {
                 var entry = sMgmt.GetRegister(DN);
-                var user = ConvertfromLdap(entry);
-                return user;
+                var person = ConvertfromLdap(entry);
+
+                var tsentry = sMgmt.GetTimeStamps(DN);
+                
+                if(tsentry.GetAttribute("createTimeStamp") != null)
+                    person.CreateTime = DateTime.ParseExact( tsentry.GetAttribute("createTimestamp").StringValue, "yyyyMMddHHmmss'Z'", System.Globalization.CultureInfo.InvariantCulture);
+                    //person.CreateTime = new DateTime(1601, 01, 01, 0, 0, 0, DateTimeKind.Utc).AddTicks( long.Parse(tsentry.GetAttribute("createTimestamp").StringValue));
+
+                if (tsentry.GetAttribute("modifyTimeStamp") != null)
+                    person.CreateTime = DateTime.ParseExact( tsentry.GetAttribute("modifyTimeStamp").StringValue, "yyyyMMddHHmmss'Z'", System.Globalization.CultureInfo.InvariantCulture);
+                    //person.ModifyTime = new DateTime(1601, 01, 01, 0, 0, 0, DateTimeKind.Utc).AddTicks( long.Parse(tsentry.GetAttribute("modifyTimestamp").StringValue));
+                
+                return person;
             }catch(LdapException ex)
             {
                 logger.Debug("Person not found {0} Ex: {1}", DN, ex.Message);
@@ -374,6 +385,14 @@ namespace lapi
 
             person.DN = entry.Dn;
 
+            /*
+            if(entry.GetAttribute("createTimeStamp") != null)
+                person.CreateTime = new DateTime(1601, 01, 01, 0, 0, 0, DateTimeKind.Utc).AddTicks( long.Parse(entry.GetAttribute("createTimestamp").StringValue));
+
+            if (entry.GetAttribute("modifyTimestamp") != null)
+                person.ModifyTime = new DateTime(1601, 01, 01, 0, 0, 0, DateTimeKind.Utc).AddTicks( long.Parse(entry.GetAttribute("modifyTimestamp").StringValue));
+            */
+            
             if (person.Description.StartsWith("[DISABLED]"))
             {
                 person.IsDisabled = true;

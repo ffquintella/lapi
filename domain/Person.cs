@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace lapi.domain
 {
-    public class Person
+    public class Person: BaseEntry
     {
         [Required]
         public string Name { get; set; }
