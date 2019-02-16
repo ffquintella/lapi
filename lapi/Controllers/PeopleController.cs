@@ -18,11 +18,11 @@ namespace lapi.Controllers
     [ApiVersion("1.0")]
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : BaseController
+    public class PeopleController : BaseController
     {
 
 
-        public UsersController(ILogger<UsersController> logger, IConfiguration iConfig)
+        public PeopleController(ILogger<PeopleController> logger, IConfiguration iConfig)
         {
 
             base.logger = logger;
@@ -41,7 +41,7 @@ namespace lapi.Controllers
             logger.LogInformation(ListItems, "{0} listing all users", requesterID);
 
 
-            var uManager = UserManager.Instance;
+            var uManager = PeopleManager.Instance;
 
             if (_start == 0 && _end != 0)
             {
@@ -62,7 +62,7 @@ namespace lapi.Controllers
 
         // GET api/users 
         [HttpGet]
-        public ActionResult<IEnumerable<domain.User>> Get([RequiredFromQuery]bool _full, [FromQuery]int _start, [FromQuery]int _end)
+        public ActionResult<IEnumerable<domain.Person>> Get([RequiredFromQuery]bool _full, [FromQuery]int _start, [FromQuery]int _end)
         {
             if (_full)
             {
@@ -75,10 +75,10 @@ namespace lapi.Controllers
                     return Conflict();
                 }
 
-                var uManager = UserManager.Instance;
-                List<domain.User> users;
+                var uManager = PeopleManager.Instance;
+                List<domain.Person> users;
 
-                if (_start == 0 && _end == 0) users = uManager.GetUsers();
+                if (_start == 0 && _end == 0) users = uManager.GetPeople();
                 else
                 {
                     throw new NotImplementedException();
@@ -89,19 +89,19 @@ namespace lapi.Controllers
             }
             else
             {
-                return new List<domain.User>();
+                return new List<domain.Person>();
             }
         }
 
 
         // GET api/users/:user
         [HttpGet("{DN}")]
-        public ActionResult<domain.User> Get(string DN)
+        public ActionResult<domain.Person> Get(string DN)
         {
             this.ProcessRequest();
-            var uManager = UserManager.Instance;
+            var uManager = PeopleManager.Instance;
 
-            var user = uManager.GetUser(DN);
+            var user = uManager.GetPerson(DN);
             logger.LogDebug(GetItem, "User DN={dn} found", DN);
 
             return user;
@@ -117,12 +117,12 @@ namespace lapi.Controllers
         {
             this.ProcessRequest();
 
-            var uManager = UserManager.Instance;
+            var uManager = PeopleManager.Instance;
 
             try
             {
                 logger.LogDebug(ItemExists, "User DN={dn} found");
-                var user = uManager.GetUser(DN);
+                var user = uManager.GetPerson(DN);
 
                 return Ok();
 
@@ -181,8 +181,8 @@ namespace lapi.Controllers
         public ActionResult Authenticate(string DN, [FromBody] AuthenticationRequest req)
         {
 
-            var uManager = UserManager.Instance;
-            var duser = uManager.GetUser(DN);
+            var uManager = PeopleManager.Instance;
+            var duser = uManager.GetPerson(DN);
 
             if (duser == null)
             {
@@ -206,7 +206,7 @@ namespace lapi.Controllers
         public ActionResult AuthenticateDirect([FromBody] AuthenticationRequest req)
         {
 
-            var uManager = UserManager.Instance;
+            var uManager = PeopleManager.Instance;
 
             string login;
 
@@ -232,10 +232,10 @@ namespace lapi.Controllers
         /// Creates the specified user.
         /// </summary>
         /// <returns>The put.</returns>
-        /// <param name="user">User.</param>
+        /// <param name="person">User.</param>
         [Authorize(Policy = "Writting")]
         [HttpPut("{DN}")]
-        public ActionResult Put(string DN, [FromBody] User user)
+        public ActionResult Put(string DN, [FromBody] Person person)
         {
             ProcessRequest();
 
@@ -243,9 +243,9 @@ namespace lapi.Controllers
 
             if (ModelState.IsValid)
             {
-                if (user.DN != null && user.DN != DN)
+                if (person.DN != null && person.DN != DN)
                 {
-                    logger.LogError(PutItem, "User DN different of the URL DN in put request user.DN={0} DN={1}", user.DN, DN);
+                    logger.LogError(PutItem, "User DN different of the URL DN in put request user.DN={0} DN={1}", person.DN, DN);
                     return Conflict();
                 }
 
@@ -263,13 +263,13 @@ namespace lapi.Controllers
 
                 var uLogin = match.Groups["login"];
 
-                var uManager = UserManager.Instance;
+                var uManager = PeopleManager.Instance;
 
-                var aduser = uManager.GetUser(DN);
+                var aduser = uManager.GetPerson(DN);
 
-                user.DN = DN;
+                person.DN = DN;
 
-                if (user.Surname == null) user.Surname = "---";
+                if (person.Surname == null) person.Surname = "---";
                 
                 if (aduser == null)
                 {
@@ -277,7 +277,7 @@ namespace lapi.Controllers
                     logger.LogInformation(InsertItem, "Creating user DN={DN}", DN);
 
 
-                    var result = uManager.CreateUser(user);
+                    var result = uManager.CreatePerson(person);
                     if (result == 0) return Ok();
                     else return this.StatusCode(500);
 
@@ -288,7 +288,7 @@ namespace lapi.Controllers
                     logger.LogInformation(UpdateItem, "Updating user DN={DN}", DN);
 
 
-                    var result = uManager.SaveUser(user);
+                    var result = uManager.SavePerson(person);
                     if (result == 0) return Ok();
                     else return this.StatusCode(500);
 
@@ -336,9 +336,9 @@ namespace lapi.Controllers
 
 
 
-            var uManager = UserManager.Instance;
+            var uManager = PeopleManager.Instance;
 
-            var duser = uManager.GetUser(DN);
+            var duser = uManager.GetPerson(DN);
 
             if (duser == null)
             {

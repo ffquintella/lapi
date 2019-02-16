@@ -10,16 +10,16 @@ using lapi.Tools;
 
 namespace lapi
 {
-    public class UserManager: ObjectManager
+    public class PeopleManager: ObjectManager
     {
 
         #region SINGLETON
 
-        private static readonly Lazy<UserManager> lazy = new Lazy<UserManager>(() => new UserManager());
+        private static readonly Lazy<PeopleManager> lazy = new Lazy<PeopleManager>(() => new PeopleManager());
 
-        public static UserManager Instance { get { return lazy.Value; } }
+        public static PeopleManager Instance { get { return lazy.Value; } }
 
-        private UserManager()
+        private PeopleManager()
         {
             logger = NLog.LogManager.GetCurrentClassLogger();
         }
@@ -89,10 +89,10 @@ namespace lapi
         /// Gets the list of all users.
         /// </summary>
         /// <returns>The users.</returns>
-        public List<User> GetUsers()
+        public List<Person> GetPeople()
         {
 
-            var users = new List<User>();
+            var users = new List<Person>();
 
             var sMgmt = LdapQueryManager.Instance;
 
@@ -105,16 +105,16 @@ namespace lapi
                 results++;
             }
 
-            logger.Debug("User search executed results:{result}", results);
+            logger.Debug("People search executed results:{result}", results);
 
 
             return users;
         }
 
 
-        public List<User> GetUsers(int start, int end)
+        public List<Person> GetPeople(int start, int end)
         {
-            var users = new List<User>();
+            var users = new List<Person>();
 
             var sMgmt = LdapQueryManager.Instance;
 
@@ -129,7 +129,7 @@ namespace lapi
                 results++;
             }
 
-            logger.Debug("User search executed results:{result}", results);
+            logger.Debug("People search executed results:{result}", results);
 
 
             return users;
@@ -140,7 +140,7 @@ namespace lapi
         /// </summary>
         /// <returns>The user.</returns>
         /// <param name="DN">The Disitnguesh name of the user</param>
-        public User GetUser (string DN)
+        public Person GetPerson (string DN)
         {
             var sMgmt = LdapQueryManager.Instance;
 
@@ -151,7 +151,7 @@ namespace lapi
                 return user;
             }catch(LdapException ex)
             {
-                logger.Debug("User not found {0} Ex: {1}", DN, ex.Message);
+                logger.Debug("Person not found {0} Ex: {1}", DN, ex.Message);
                 return null;
             }
 
@@ -162,16 +162,16 @@ namespace lapi
         /// </summary>
         /// <returns> -1 Error </returns>
         /// <returns> 0 OK </returns>
-        /// <param name="user">User.</param>
-        public int CreateUser(User user)
+        /// <param name="person">User.</param>
+        public int CreatePerson(Person person)
         {
 
             //Creates the List attributes of the entry and add them to attributeset
 
-            LdapAttributeSet attributeSet = GetAttributeSet(user);
+            LdapAttributeSet attributeSet = GetAttributeSet(person);
 
             // DN of the entry to be added
-            string dn = user.DN;
+            string dn = person.DN;
 
             LdapEntry newEntry = new LdapEntry(dn, attributeSet);
 
@@ -196,20 +196,20 @@ namespace lapi
         /// Saves the user.
         /// </summary>
         /// <returns>The user. Must have DN set</returns>
-        /// <param name="user">User.</param>
-        public int SaveUser(User user)
+        /// <param name="person">User.</param>
+        public int SavePerson(Person person)
         {
 
             var qMgmt = LdapQueryManager.Instance;
 
             var modList = new List<LdapModification>();
 
-            var atributes = GetAttributeSet(user);
+            var atributes = GetAttributeSet(person);
 
             //Get user from the Directory
             try
             {
-                var duser = GetUser(user.DN);
+                var duser = GetPerson(person.DN);
 
                 var dattrs = GetAttributeSet(duser);
 
@@ -240,7 +240,7 @@ namespace lapi
 
                 try
                 {
-                    qMgmt.SaveEntry(user.DN, modList.ToArray());
+                    qMgmt.SaveEntry(person.DN, modList.ToArray());
                     return 0;
 
                 }
@@ -271,33 +271,33 @@ namespace lapi
         }
 
 
-        private LdapAttributeSet GetAttributeSet(User user)
+        private LdapAttributeSet GetAttributeSet(Person person)
         {
             LdapAttributeSet attributeSet = new LdapAttributeSet();
 
-            attributeSet.Add(new LdapAttribute("objectclass", new string[] { "top", "person", "simpleSecurityObject" }));
-            attributeSet.Add(new LdapAttribute("cn", new string[] { user.Name }));
-            if (user.Surname == null) user.Surname = "---";
-            attributeSet.Add(new LdapAttribute("sn", user.Surname ));
+            attributeSet.Add(new LdapAttribute("objectclass", new string[] { "top", "person", "inetOrgPerson", "organizationalPerson", "simpleSecurityObject" }));
+            attributeSet.Add(new LdapAttribute("cn", new string[] { person.Name }));
+            if (person.Surname == null) person.Surname = "---";
+            attributeSet.Add(new LdapAttribute("sn", person.Surname ));
 
 
-            if (user.IsDisabled == true)
+            if (person.IsDisabled == true)
             {
-                if (!user.Description.StartsWith("[DISABLED]"))
-                    attributeSet.Add(new LdapAttribute("description", "[DISABLED]"+user.Description));
+                if (!person.Description.StartsWith("[DISABLED]"))
+                    attributeSet.Add(new LdapAttribute("description", "[DISABLED]"+person.Description));
             }
             else
             {
-                attributeSet.Add(new LdapAttribute("description", user.Description));
+                attributeSet.Add(new LdapAttribute("description", person.Description));
             }
 
-            if (user.Password == null )
+            if (person.Password == null )
             {
-                if(user.IsDisabled == null) user.IsDisabled = true;
+                if(person.IsDisabled == null) person.IsDisabled = true;
             }
             else
             {
-                if (user.IsDisabled == null) user.IsDisabled = false;
+                if (person.IsDisabled == null) person.IsDisabled = false;
                 var ldapCfg = new LdapConfig();
                 /*if (ldapCfg.ssl == false)
                 {
@@ -308,7 +308,7 @@ namespace lapi
                 //byte[] encodedBytes = Encoding.Unicode.GetBytes(quotePwd);
                 //attributeSet.Add(new LdapAttribute("unicodePwd", encodedBytes));
 
-                var hashedPassword = lapi.Security.HashHelper.GenerateSaltedSHA1(user.Password);
+                var hashedPassword = lapi.Security.HashHelper.GenerateSaltedSHA1(person.Password);
                 attributeSet.Add(new LdapAttribute("userPassword", hashedPassword));
                 
 
@@ -322,9 +322,9 @@ namespace lapi
             return attributeSet;
         }
 
-        private User ConvertfromLdap(LdapEntry entry)
+        private Person ConvertfromLdap(LdapEntry entry)
         {
-            var user = new User();
+            var user = new Person();
 
             user.Name = entry.GetAttribute("cn").StringValue;
 
@@ -347,8 +347,8 @@ namespace lapi
         /// Deletes the user.
         /// </summary>
         /// <returns>0 for success -1 for error.</returns>
-        /// <param name="user">User.</param>
-        public int DeleteUser(User user)
+        /// <param name="person">User.</param>
+        public int DeleteUser(Person person)
         {
         
 
@@ -356,7 +356,7 @@ namespace lapi
 
             try
             {
-                qMgmt.DeleteEntry(user.DN);
+                qMgmt.DeleteEntry(person.DN);
                 return 0;
 
             }

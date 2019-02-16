@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace lapi.domain
 {
-    public class User
+    public class Person
     {
         [Required]
         public string Name { get; set; }
@@ -16,12 +16,11 @@ namespace lapi.domain
 
         public string Password { get; set; }
 
-
         public bool? IsDisabled { get; set; }
 
 
 
-        public User()
+        public Person()
         {
         }
 
