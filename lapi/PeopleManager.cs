@@ -311,36 +311,148 @@ namespace lapi
                 var hashedPassword = lapi.Security.HashHelper.GenerateSaltedSHA1(person.Password);
                 attributeSet.Add(new LdapAttribute("userPassword", hashedPassword));
                 
-
-
             }
 
-            //attributeSet.Add(new LdapAttribute("givenname", "James"));
-            //attributeSet.Add(new LdapAttribute("sn", "Smith"));
-            //attributeSet.Add(new LdapAttribute("mail", "JSmith@Acme.com"));
+            if (person.Mails != null)
+            {
+                foreach (var mail in person.Mails)
+                {
+                    attributeSet.Add(new LdapAttribute("mail", mail));
+                }
+                
+            }
+
+            if (person.Phones != null)
+            {
+                foreach (var phone in person.Phones)
+                {
+                    attributeSet.Add(new LdapAttribute("homePhone", phone));
+                }
+            }
+            
+            if (person.Addresses != null)
+            {
+                foreach (var address in person.Addresses)
+                {
+                    attributeSet.Add(new LdapAttribute("street", address));
+                }
+            }
+            
+            if (person.Mobiles != null)
+            {
+                foreach (var mobile in person.Mobiles)
+                {
+                    attributeSet.Add(new LdapAttribute("mobile", mobile));
+                }
+            }
+            
+            if (person.IDs != null)
+            {
+                foreach (var id in person.IDs)
+                {
+                    attributeSet.Add(new LdapAttribute("uid", id));
+                }
+            }
+            
+            if(person.GivenName != null) 
+                attributeSet.Add(new LdapAttribute("givenname", person.GivenName));
+            
+            if(person.State != null) 
+                attributeSet.Add(new LdapAttribute("st", person.State));
+
 
             return attributeSet;
         }
 
         private Person ConvertfromLdap(LdapEntry entry)
         {
-            var user = new Person();
+            var person = new Person();
 
-            user.Name = entry.GetAttribute("cn").StringValue;
+            person.Name = entry.GetAttribute("cn").StringValue;
 
-            if(entry.GetAttribute("description") != null) user.Description = entry.GetAttribute("description").StringValue;
+            if(entry.GetAttribute("description") != null) person.Description = entry.GetAttribute("description").StringValue;
 
-            user.DN = entry.Dn;
+            person.DN = entry.Dn;
 
-            if (user.Description.StartsWith("[DISABLED]"))
+            if (person.Description.StartsWith("[DISABLED]"))
             {
-                user.IsDisabled = true;
-                user.Description = user.Description.Substring("[DISABLED]".Length);
+                person.IsDisabled = true;
+                person.Description = person.Description.Substring("[DISABLED]".Length);
             }
-            else user.IsDisabled = false;
-          
+            else person.IsDisabled = false;
 
-            return user;
+            if (entry.GetAttribute("mail") != null)
+            {
+                var mails = entry.GetAttribute("mail").StringValues;
+
+                person.Mails = new List<string>();
+                
+                while(mails.MoveNext())
+                {
+                    person.Mails.Add(mails.Current);
+                }
+            }
+            
+            if (entry.GetAttribute("homePhone") != null)
+            {
+                var phones = entry.GetAttribute("homePhone").StringValues;
+
+                person.Phones = new List<string>();
+                
+                while(phones.MoveNext())
+                {
+                    person.Phones.Add(phones.Current);
+                }
+            }
+            
+            if (entry.GetAttribute("mobile") != null)
+            {
+                var mobiles = entry.GetAttribute("mobile").StringValues;
+
+                person.Mobiles = new List<string>();
+                
+                while(mobiles.MoveNext())
+                {
+                    person.Mobiles.Add(mobiles.Current);
+                }
+            }
+            
+            if (entry.GetAttribute("street") != null)
+            {
+                var addresses = entry.GetAttribute("street").StringValues;
+
+                person.Addresses = new List<string>();
+                
+                while(addresses.MoveNext())
+                {
+                    person.Addresses.Add(addresses.Current);
+                }
+            }
+            
+            if (entry.GetAttribute("uid") != null)
+            {
+                var ids = entry.GetAttribute("uid").StringValues;
+
+                person.IDs = new List<string>();
+                
+                while(ids.MoveNext())
+                {
+                    person.IDs.Add(ids.Current);
+                }
+            }
+           
+            if (entry.GetAttribute("givenname") != null)
+            {
+                person.GivenName = entry.GetAttribute("givenname").StringValue;
+            }
+            
+            if (entry.GetAttribute("st") != null)
+            {
+                person.State = entry.GetAttribute("st").StringValue;
+            }
+            
+
+            return person;
         }
 
         /// <summary>

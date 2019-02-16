@@ -44,10 +44,10 @@ namespace lapi.Security
                     if (key != null && key.secretKey == vals[1] && key.authorizedIP == Request.HttpContext.Connection.RemoteIpAddress.ToString())
                     {
     
-                        const string Issuer = "https://fgv.br";
+                        const string issuer = "https://fgv.br";
                         var claims = new List<Claim>();
     
-                        claims.Add(new Claim(ClaimTypes.Name, key.keyID, ClaimValueTypes.String, Issuer));
+                        claims.Add(new Claim(ClaimTypes.Name, key.keyID, ClaimValueTypes.String, issuer));
     
                         List<string> tclaims = HttpSecurity.getClaims(key.secretKey);
     
