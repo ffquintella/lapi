@@ -32,7 +32,7 @@ namespace lapi.Controllers
 
         #region GET
         
-        // GET api/users
+        // GET api/people
         [HttpGet]
         public ActionResult<IEnumerable<String>> Get([FromQuery]int _start, [FromQuery]int _end)
         {
@@ -94,6 +94,22 @@ namespace lapi.Controllers
             }
         }
 
+        // GET api/people/search/:filter
+        [HttpGet("search/{filter}")]
+        public ActionResult<IEnumerable<String>> SearchGet(string filter)
+        {
+
+            this.ProcessRequest();
+
+            logger.LogInformation(ListItems, "{0} searching users", requesterID);
+
+
+            var pManager = PeopleManager.Instance;
+
+            return pManager.GetList(filter);
+   
+
+        }
 
         // GET api/people/:person
         [HttpGet("{DN}")]

@@ -54,6 +54,36 @@ namespace lapi
             return users;
         }
 
+        /// <summary>
+        /// Search for users that satisfies the filter
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public List<String> GetList(string filter)
+        {
+            var users = new List<String>();
+
+            var sMgmt = LdapQueryManager.Instance;
+
+            int results = 0;
+
+            var initial_filter = $"(&(objectClass=person)";
+            
+            var final_filter = initial_filter +"("+ filter + "))";
+
+            var resps = sMgmt.ExecuteSearch("", final_filter);
+            
+            foreach(var entry in resps)
+            {
+                users.Add(entry.Dn);
+                results++;
+            }
+
+            logger.Debug("User search executed results:{result}", results);
+
+
+            return users;
+        }
 
 
         /// <summary>
