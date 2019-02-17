@@ -60,7 +60,7 @@ namespace lapi.Controllers
         }
 
 
-        // GET api/users 
+        // GET api/people 
         [HttpGet]
         public ActionResult<IEnumerable<domain.Person>> Get([RequiredFromQuery]bool _full, [FromQuery]int _start, [FromQuery]int _end)
         {
@@ -94,7 +94,7 @@ namespace lapi.Controllers
         }
 
 
-        // GET api/users/:user
+        // GET api/people/:person
         [HttpGet("{DN}")]
         public ActionResult<domain.Person> Get(string DN)
         {
@@ -124,6 +124,8 @@ namespace lapi.Controllers
                 logger.LogDebug(ItemExists, "User DN={dn} found");
                 var user = uManager.GetPerson(DN);
 
+                if (user == null) return NotFound();
+                    
                 return Ok();
 
             }
