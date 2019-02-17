@@ -54,36 +54,7 @@ namespace lapi
             return users;
         }
 
-        //TODO: Verify the lower limit witch is not working
 
-        /// <summary>
-        /// Gets the list. Limited to a start and end number based on the total colection sorted by the name
-        /// </summary>
-        /// <returns>The list.</returns>
-        /// <param name="start">Start.</param>
-        /// <param name="end">End.</param>
-        public List<String> GetList(int start, int end)
-        {
-            var users = new List<String>();
-
-            var sMgmt = LdapQueryManager.Instance;
-
-            int results = 0;
-
-
-            var resps = sMgmt.ExecuteLimitedSearch("", LdapSearchType.User, start, end);
-
-            foreach (var entry in resps)
-            {
-                users.Add(entry.GetAttribute("distinguishedName").StringValue);
-                results++;
-            }
-
-            logger.Debug("User search executed results:{result}", results);
-
-
-            return users;
-        }
 
         /// <summary>
         /// Gets the list of all users.
@@ -111,29 +82,6 @@ namespace lapi
             return users;
         }
 
-
-        public List<Person> GetPeople(int start, int end)
-        {
-            var users = new List<Person>();
-
-            var sMgmt = LdapQueryManager.Instance;
-
-            int results = 0;
-
-
-            var resps = sMgmt.ExecuteLimitedSearch("", LdapSearchType.User, start, end);
-
-            foreach (var entry in resps)
-            {
-                users.Add(ConvertfromLdap(entry));
-                results++;
-            }
-
-            logger.Debug("People search executed results:{result}", results);
-
-
-            return users;
-        }
 
         /// <summary>
         /// Gets the user.
@@ -326,43 +274,53 @@ namespace lapi
 
             if (person.Mails != null)
             {
+                var asMail = new LdapAttribute("mail");
                 foreach (var mail in person.Mails)
                 {
-                    attributeSet.Add(new LdapAttribute("mail", mail));
+                   asMail.AddValue(mail);
                 }
-                
+
+                attributeSet.Add(asMail);
             }
 
             if (person.Phones != null)
             {
+                var asPhones = new LdapAttribute("homePhone");
                 foreach (var phone in person.Phones)
                 {
-                    attributeSet.Add(new LdapAttribute("homePhone", phone));
+                    asPhones.AddValue(phone);
                 }
+                attributeSet.Add(asPhones);
             }
             
             if (person.Addresses != null)
             {
+                var asAddrs = new LdapAttribute("street");
                 foreach (var address in person.Addresses)
                 {
-                    attributeSet.Add(new LdapAttribute("street", address));
+                    asAddrs.AddValue(address);
                 }
+                attributeSet.Add(asAddrs);
             }
             
             if (person.Mobiles != null)
             {
+                var asMobiles = new LdapAttribute("mobile");
                 foreach (var mobile in person.Mobiles)
                 {
-                    attributeSet.Add(new LdapAttribute("mobile", mobile));
+                    asMobiles.AddValue(mobile);
                 }
+                attributeSet.Add(asMobiles);
             }
             
             if (person.IDs != null)
             {
+                var asIds = new LdapAttribute("uid");
                 foreach (var id in person.IDs)
                 {
-                    attributeSet.Add(new LdapAttribute("uid", id));
+                    asIds.AddValue(id);
                 }
+                attributeSet.Add(asIds);
             }
             
             if(person.GivenName != null) 

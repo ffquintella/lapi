@@ -31,6 +31,7 @@ namespace lapi.Controllers
         }
 
         #region GET
+        
         // GET api/users
         [HttpGet]
         public ActionResult<IEnumerable<String>> Get([FromQuery]int _start, [FromQuery]int _end)
@@ -143,35 +144,6 @@ namespace lapi.Controllers
         {
             throw new NotImplementedException();
             
-            /*this.ProcessRequest();
-
-            var uManager = UserManager.Instance;
-
-            try
-            {
-                logger.LogDebug(ItemExists, "User DN={dn} found");
-                var user = uManager.GetUser(DN);
-
-
-                foreach (domain.Group grp in user.MemberOf)
-                {
-                    if (grp.DN == group)
-                    {
-                        return Ok();
-                    }
-                }
-
-                // Rerturns 460 code telling that the user exists but it's not a member 
-                return StatusCode(250);
-
-
-            }
-            catch (Exception)
-            {
-                logger.LogDebug(ItemExists, "User DN={dn} not found.");
-                return NotFound();
-            }
-            */
 
         }
         #endregion
