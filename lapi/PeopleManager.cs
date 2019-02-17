@@ -6,6 +6,7 @@ using System.Text;
 using NLog;
 using lapi.domain;
 using lapi.Ldap;
+using lapi.Ldap.Security;
 using lapi.Tools;
 
 namespace lapi
@@ -67,11 +68,11 @@ namespace lapi
 
             int results = 0;
 
-            var initial_filter = $"(&(objectClass=person)";
+            var initialFilter = $"(&(objectClass=person)";
             
-            var final_filter = initial_filter +"("+ filter + "))";
+            var finalFilter = initialFilter +"("+  filter + "))";
 
-            var resps = sMgmt.ExecuteSearch("", final_filter);
+            var resps = sMgmt.ExecuteSearch("", finalFilter);
             
             foreach(var entry in resps)
             {
