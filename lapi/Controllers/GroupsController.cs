@@ -35,7 +35,7 @@ namespace lapi.Controllers
         #region GET
         // GET api/groups
         [HttpGet]
-        public ActionResult<IEnumerable<String>> Get([FromQuery]int _start, [FromQuery]int _end)
+        public ActionResult<IEnumerable<String>> Get([FromQuery]string OU, [FromQuery]int _start, [FromQuery]int _end )
         {
 
             this.ProcessRequest();
@@ -49,9 +49,11 @@ namespace lapi.Controllers
                 return Conflict();
             }
 
+            if (OU == null) OU = "";
+
             if (_start == 0 && _end == 0) 
-            return gManager.GetList();
-            else return gManager.GetList(_start, _end);
+            return gManager.GetList(OU);
+            else return gManager.GetList( _start, _end, OU);
 
 
         }

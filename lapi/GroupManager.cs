@@ -24,11 +24,13 @@ namespace lapi
 
         #endregion
 
+        
         /// <summary>
         /// Return a string list of the groups DNs
         /// </summary>
         /// <returns>The list.</returns>
-        public List<String> GetList()
+        /// <param name="searchBase"> The OU to be added in the search </param>
+        public List<string> GetList(string searchBase = "")
         {
             var groups = new List<String>();
 
@@ -37,7 +39,7 @@ namespace lapi
             int results = 0;
 
 
-            var resps = sMgmt.ExecuteSearch("", LdapSearchType.Group);
+            var resps = sMgmt.ExecuteSearch(searchBase, LdapSearchType.Group);
 
             foreach (var entry in resps)
             {
@@ -58,7 +60,8 @@ namespace lapi
         /// <returns>The list.</returns>
         /// <param name="start">Start.</param>
         /// <param name="end">End.</param>
-        public List<String> GetList(int start, int end)
+        /// <param name="searchBase"> The OU to be added in the search </param>
+        public List<string> GetList( int start, int end, string searchBase = "")
         {
             var groups = new List<String>();
 
@@ -67,7 +70,7 @@ namespace lapi
             int results = 0;
 
 
-            var resps = sMgmt.ExecuteLimitedSearch("", LdapSearchType.Group, start, end);
+            var resps = sMgmt.ExecuteLimitedSearch(searchBase, LdapSearchType.Group, start, end);
 
             foreach (var entry in resps)
             {
