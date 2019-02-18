@@ -154,10 +154,30 @@ namespace lapi.Controllers
 
         }
 
-        // GET api/users/:user/member-of/:group
-        [HttpGet("{DN}/member-of/{group}")]
-        public IActionResult IsMemberOf(string DN, string group)
+        // GET api/people/:person/member-of
+        [HttpGet("{DN}/member-of")]
+        public ActionResult<List<string>> MemberOf(string DN)
         {
+            this.ProcessRequest();
+
+            var pManager = PeopleManager.Instance;
+
+            try
+            {
+
+                var groups = pManager.GetPersonGroups(DN);
+
+                if (groups == null) return NotFound();
+
+                return groups;
+
+            }
+            catch (Exception)
+            {
+                logger.LogDebug(ItemExists, "Error listing groups of DN={dn}.");
+                return NotFound();
+            }
+            
             throw new NotImplementedException();
             
 

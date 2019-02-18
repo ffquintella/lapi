@@ -114,6 +114,39 @@ namespace lapi
         }
 
 
+        public List<string> GetPersonGroups(string DN)
+        {
+            var sMgmt = LdapQueryManager.Instance;
+            
+            try
+            {
+                var groups = new List<string>();
+                
+                var list = sMgmt.ExecuteSearch("",
+                    "(&(objectClass=groupOfNames)(member=" + DN + "))");
+
+                foreach (var entry in list)
+                {
+                    groups.Add(entry.Dn);
+                }
+                
+                var list2 = sMgmt.ExecuteSearch("",
+                    "(&(objectClass=groupOfUniqueNames)(uniqueMember=" + DN + "))");
+                
+                foreach (var entry in list2)
+                {
+                    groups.Add(entry.Dn);
+                }
+
+                return groups;
+            }catch(LdapException ex)
+            {
+                logger.Debug("Person not found {0} Ex: {1}", DN, ex.Message);
+                return null;
+            }
+            
+        }
+
         /// <summary>
         /// Gets the user.
         /// </summary>
