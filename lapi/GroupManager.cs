@@ -88,14 +88,14 @@ namespace lapi
         /// Gets the list of all groups.
         /// </summary>
         /// <returns>The users.</returns>
-        public List<Group> GetGroups()
+        public List<Group> GetGroups(string searchBase = "")
         {
 
             var groups = new List<Group>();
 
             var sMgmt = LdapQueryManager.Instance;
 
-            var resps = sMgmt.ExecuteSearch("", LdapSearchType.Group);
+            var resps = sMgmt.ExecuteSearch(searchBase, LdapSearchType.Group);
             int results = 0;
 
             foreach (var entry in resps)

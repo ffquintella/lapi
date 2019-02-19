@@ -60,7 +60,7 @@ namespace lapi.Controllers
 
         // GET api/groups 
         [HttpGet]
-        public ActionResult<IEnumerable<domain.Group>> Get([RequiredFromQuery]bool _full, [FromQuery]int _start, [FromQuery]int _end)
+        public ActionResult<IEnumerable<domain.Group>> Get([RequiredFromQuery]bool _full, [FromQuery]string OU, [FromQuery]int _start, [FromQuery]int _end)
         {
             if (_full)
             {
@@ -77,9 +77,11 @@ namespace lapi.Controllers
                 List<domain.Group> groups;
 
                 //if (_start == 0 && _end == 0) 
-                groups = gManager.GetGroups();
+                //groups = gManager.GetGroups();
                 //else groups = gManager.GetGroups(_start, _end);
-
+                if(OU != null) groups = gManager.GetGroups(OU);
+                else groups = gManager.GetGroups();
+                
                 return groups;
             }
             else
