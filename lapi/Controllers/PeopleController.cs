@@ -110,6 +110,23 @@ namespace lapi.Controllers
    
 
         }
+        
+        // GET api/people/ingroup/:group
+        [HttpGet("ingroup/{group}")]
+        public ActionResult<IEnumerable<domain.Person>> GetPeopleInGroup(string group)
+        {
+
+            this.ProcessRequest();
+
+            logger.LogInformation(ListItems, "{0} searching users in group {1}", requesterID, group);
+
+
+            var pManager = PeopleManager.Instance;
+
+            return pManager.GetPeopleInGroup(group);
+
+
+        }
 
         // GET api/people/:person
         [HttpGet("{DN}")]

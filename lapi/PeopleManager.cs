@@ -112,6 +112,31 @@ namespace lapi
 
             return users;
         }
+        
+        public List<Person> GetPeopleInGroup(string groupDN)
+        {
+
+            var gMgr = GroupManager.Instance;
+
+            var group = gMgr.GetGroup(groupDN);
+
+            var users = new List<Person>();
+
+            var sMgmt = LdapQueryManager.Instance;
+            int results = 0;
+            
+            foreach (var member in group.Member)
+            {
+                var entry = sMgmt.GetRegister(member);
+                users.Add(ConvertfromLdap(entry));
+                results++;
+            }
+
+            logger.Debug("People search executed results:{result}", results);
+
+
+            return users;
+        }
 
 
         public List<string> GetPersonGroups(string DN)
