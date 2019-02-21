@@ -329,18 +329,20 @@ namespace lapi
         {
             LdapAttributeSet attributeSet = new LdapAttributeSet();
 
-            attributeSet.Add(new LdapAttribute("objectclass", new string[] { "top", "groupOfUniqueNames" }));
+            attributeSet.Add(new LdapAttribute("objectclass", new string[] { "top", "groupOfNames" }));
             //attributeSet.Add(new LdapAttribute("name", group.Name));
             attributeSet.Add(new LdapAttribute("cn", group.Name));
             attributeSet.Add(new LdapAttribute("description", group.Description));
 
-
-            var amember = new LdapAttribute("uniqueMember");
+            if(group.Member.Count == 0) group.Member.Add("");
+                
+            var amember = new LdapAttribute("member");
 
             foreach (String member in group.Member)
             {
                 amember.AddValue(member);
             }
+             
 
             attributeSet.Add(amember);
             
