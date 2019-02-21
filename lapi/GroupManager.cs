@@ -332,7 +332,8 @@ namespace lapi
             attributeSet.Add(new LdapAttribute("objectclass", new string[] { "top", "groupOfNames" }));
             //attributeSet.Add(new LdapAttribute("name", group.Name));
             attributeSet.Add(new LdapAttribute("cn", group.Name));
-            attributeSet.Add(new LdapAttribute("description", group.Description));
+            if(group.Description != null)
+                attributeSet.Add(new LdapAttribute("description", group.Description));
 
             if(group.Member.Count == 0) group.Member.Add("");
                 
