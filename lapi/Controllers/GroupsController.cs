@@ -232,6 +232,12 @@ namespace lapi.Controllers
                     return Conflict();
                 }
 
+                if (group.Member.Count == 0)
+                {
+                    logger.LogError(PutItem, "Group cannot be empty");
+                    return Conflict();
+                }
+                
                 Regex regex = new Regex(@"\Acn=(?<gname>[^,]+?),", RegexOptions.IgnoreCase);
 
                 Match match = regex.Match(DN);

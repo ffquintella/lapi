@@ -20,6 +20,7 @@ namespace lapi.domain
         public GroupType Type { get; set; }
 
         private List<String> _member;
+        [Required]
         public List<String> Member
         {
             get

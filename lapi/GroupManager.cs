@@ -213,7 +213,6 @@ namespace lapi
 
             LdapEntry newEntry = new LdapEntry(dn, attributeSet);
 
-
             var qMgmt = LdapQueryManager.Instance;
 
             try
@@ -330,12 +329,13 @@ namespace lapi
         {
             LdapAttributeSet attributeSet = new LdapAttributeSet();
 
-            attributeSet.Add(new LdapAttribute("objectclass", new string[] { "top", "group" }));
-            attributeSet.Add(new LdapAttribute("name", group.Name));
+            attributeSet.Add(new LdapAttribute("objectclass", new string[] { "top", "groupOfUniqueNames" }));
+            //attributeSet.Add(new LdapAttribute("name", group.Name));
             attributeSet.Add(new LdapAttribute("cn", group.Name));
             attributeSet.Add(new LdapAttribute("description", group.Description));
 
-            var amember = new LdapAttribute("member");
+
+            var amember = new LdapAttribute("uniqueMember");
 
             foreach (String member in group.Member)
             {
@@ -343,6 +343,7 @@ namespace lapi
             }
 
             attributeSet.Add(amember);
+            
 
             return attributeSet;
         }
