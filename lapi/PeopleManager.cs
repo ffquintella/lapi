@@ -336,7 +336,8 @@ namespace lapi
             }
             else
             {
-                attributeSet.Add(new LdapAttribute("description", person.Description));
+                if(person.Description != null)
+                    attributeSet.Add(new LdapAttribute("description", person.Description));
             }
 
             if (person.Password == null )
@@ -346,15 +347,6 @@ namespace lapi
             else
             {
                 if (person.IsDisabled == null) person.IsDisabled = false;
-                var ldapCfg = new LdapConfig();
-                /*if (ldapCfg.ssl == false)
-                {
-                    throw new domain.Exceptions.SSLRequiredException();
-                }*/
-
-                //string quotePwd = String.Format(@"""{0}""", user.Password);
-                //byte[] encodedBytes = Encoding.Unicode.GetBytes(quotePwd);
-                //attributeSet.Add(new LdapAttribute("unicodePwd", encodedBytes));
 
                 var hashedPassword = lapi.Security.HashHelper.GenerateSaltedSHA1(person.Password);
                 attributeSet.Add(new LdapAttribute("userPassword", hashedPassword));
