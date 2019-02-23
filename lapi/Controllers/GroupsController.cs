@@ -339,6 +339,97 @@ namespace lapi.Controllers
         }
 
         #endregion
+        
+        #region POST
+        
+        // PUT api/groups/:group/addmembers
+        [HttpPost("{DN}/addmembers")]
+        public ActionResult AddMembers(string DN, [FromBody] String[] members)
+        {
+            this.ProcessRequest();
+            var gManager = GroupManager.Instance;
+
+            try
+            {
+                logger.LogDebug(ListItems, "Group DN={dn} found");
+                var group = gManager.GetGroup(DN);
+
+                //group.Member.Clear();
+
+                foreach(String member in members)
+                {
+                    group.Member.Add(member);
+                }
+
+                try
+                {
+                    logger.LogInformation(PutItem, "Saving group members for group:{DN}", DN);
+                    gManager.SaveGroup(group);
+                    return Ok();
+                }catch(Exception ex)
+                {
+                    logger.LogError(InternalError, "Error saving DN={dn} EX:", DN, ex.Message);
+                    return this.StatusCode(500);
+                }
+
+                //return group.Member;
+
+            }
+            catch (Exception)
+            {
+                logger.LogDebug(ListItems, "Group DN={dn} not found.", DN);
+                return NotFound();
+            }
+
+        }
+        
+        // PUT api/groups/:group/deletemembers
+        [HttpPost("{DN}/deletemembers")]
+        public ActionResult DeleteMembers(string DN, [FromBody] String[] members)
+        {
+            this.ProcessRequest();
+            var gManager = GroupManager.Instance;
+
+            try
+            {
+                logger.LogDebug(ListItems, "Group DN={dn} found");
+                var group = gManager.GetGroup(DN);
+
+                //group.Member.Clear();
+
+                foreach(String member in members)
+                {
+                    int index = group.Member.FindIndex(m => m == member);
+                    while (index > 0)
+                    {
+                        group.Member.RemoveAt(index);
+                        index = group.Member.FindIndex(m => m == member);
+                    }
+                }
+
+                try
+                {
+                    logger.LogInformation(PutItem, "Saving group members for group:{DN}", DN);
+                    gManager.SaveGroup(group);
+                    return Ok();
+                }catch(Exception ex)
+                {
+                    logger.LogError(InternalError, "Error saving DN={dn} EX:", DN, ex.Message);
+                    return this.StatusCode(500);
+                }
+
+                //return group.Member;
+
+            }
+            catch (Exception)
+            {
+                logger.LogDebug(ListItems, "Group DN={dn} not found.", DN);
+                return NotFound();
+            }
+
+        }
+        
+        #endregion
 
         #region DELETE
 
