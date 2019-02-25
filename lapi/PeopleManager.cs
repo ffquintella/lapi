@@ -128,8 +128,11 @@ namespace lapi
             foreach (var member in group.Member)
             {
                 var entry = sMgmt.GetRegister(member);
-                users.Add(ConvertfromLdap(entry));
-                results++;
+                if (entry != null)
+                {
+                    users.Add(ConvertfromLdap(entry));
+                    results++;
+                }
             }
 
             logger.Debug("People search executed results:{result}", results);

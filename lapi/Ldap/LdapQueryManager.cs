@@ -235,10 +235,18 @@ namespace lapi.Ldap
             //string[] attrs = {"*", null};
 
             //var lsc = new LdapSearchConstraints(); 
-            
-            var res = con.Read(DN);
+            try
+            {
+                var res = con.Read(DN);
+                return res;
+            }
+            catch (LdapException ex)
+            {
+                logger.Error("Could not read entry DN: {0} Message:{1}",DN, ex.ToString());
+                return null;
+            }
 
-            return res;
+            
 
         }
         
