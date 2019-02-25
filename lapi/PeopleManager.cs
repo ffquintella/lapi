@@ -187,6 +187,11 @@ namespace lapi
             try
             {
                 var entry = sMgmt.GetRegister(DN);
+                if (entry == null)
+                {
+                    logger.Debug("Person not found {0}", DN);
+                    return null;
+                }
                 var person = ConvertfromLdap(entry);
 
                 var tsentry = sMgmt.GetTimeStamps(DN);
