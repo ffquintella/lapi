@@ -128,7 +128,7 @@ namespace lapi
             foreach (var member in group.Member)
             {
                 var entry = sMgmt.GetRegister(member);
-                if (entry != null)
+                if (entry != null && ! string.IsNullOrEmpty(entry.Dn))
                 {
                     users.Add(ConvertfromLdap(entry));
                     results++;
