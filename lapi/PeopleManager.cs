@@ -439,13 +439,19 @@ namespace lapi
             if (entry.GetAttribute("modifyTimestamp") != null)
                 person.ModifyTime = new DateTime(1601, 01, 01, 0, 0, 0, DateTimeKind.Utc).AddTicks( long.Parse(entry.GetAttribute("modifyTimestamp").StringValue));
             */
-            
-            if (person.Description.StartsWith("[DISABLED]"))
+            if (person.Description != null)
             {
-                person.IsDisabled = true;
-                person.Description = person.Description.Substring("[DISABLED]".Length);
+                if (person.Description.StartsWith("[DISABLED]"))
+                {
+                    person.IsDisabled = true;
+                    person.Description = person.Description.Substring("[DISABLED]".Length);
+                }
+                else person.IsDisabled = false;
             }
-            else person.IsDisabled = false;
+            else
+            {
+                person.IsDisabled = false;
+            }
 
             if (entry.GetAttribute("mail") != null)
             {
